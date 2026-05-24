@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>¡Sálvese quien pueda! - Companion App</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --primary: #00ff66; /* Verde Frecuencia */
+            --danger: #ff3366;  /* Rojo Daño */
+            --text: #ffffff;
+            --text-dim: #a0a0a5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            width: 100%;
+            padding: 10px 0;
+            border-bottom: 2px dashed #2a2a30;
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #222;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            font-weight: bold;
+            color: var(--text-dim);
+        }
+
+        .status-badge.vasallo {
+            background: var(--danger);
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .counter-card {
+            background: var(--card-bg);
+            border: 2px solid #2a2a30;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+        }
+
+        .counter-card.frecuencia {
+            border-color: var(--primary);
+        }
+
+        .counter-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-bottom: 5px;
+        }
+
+        .counter-value {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1;
+            margin: 10px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .frecuencia .counter-value {
+            color: var(--primary);
+            text-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+        }
+
+        .estructura .counter-value {
+            color: #ffaa00;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            background: #2a2a32;
+            border: none;
+            color: var(--text);
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            active-background: #3a3a45;
+        }
+
+        .btn:active {
+            background: #3a3a45;
+            transform: scale(0.98);
+        }
+
+        .btn-plus {
+            background: #223e2b;
+            color: #22c55e;
+        }
+        .btn-plus:active { background: #1e462f; }
+
+        .btn-minus {
+            background: #3b2328;
+            color: #ef4444;
+        }
+        .btn-minus:active { background: #442027; }
+
+        .reset-turn-btn {
+            background: var(--primary);
+            color: #000;
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            width: 100%;
+            border: none;
+        }
+        .reset-turn-btn:active {
+            background: #00cc52;
+        }
+
+        .footer-utility {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: space-between;
+            background: #1a1a1e;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #2a2a30;
+            font-size: 0.9rem;
+        }
+
+        .utility-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .utility-btn {
+            background: #2a2a32;
+            border: none;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.4); }
+            70% { opacity: 1; box-shadow: 0 0 0 10px rgba(255, 51, 102, 0); }
+            100% { opacity: 0.8; box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>¡Sálvese Quien Pueda!</h1>
+        <div id="statusBadge" class="status-badge">ESTADO: AUTÓNOMO</div>
+    </header>
+
+    <div class="main-container">
+        <div class="counter-card frecuencia">
+            <div class="counter-title">⚡ Frecuencia (Acciones)</div>
+            <div id="frecuenciaValue" class="counter-value">3</div>
+            <div class="controls">
+                <button class="btn btn-minus" onclick="changeValue('frecuencia', -1)">-</button>
+                <button class="btn btn-plus" onclick="changeValue('frecuencia', 1)">+</button>
+            </div>
+            <button class="reset-turn-btn" onclick="resetTurn()">🔄 Nuevo Turno (Set a 3⚡)</button>
+        </div>
+
+        <div class="counter-card estructura">
+            <div class="counter-title">🏛️ Estructura del Centro de Mando</div>
+            <div id="estructuraValue" class="counter-value">10</div>
+            <div class="controls">
+                <button class="btn btn-minus" onclick="changeValue('estructura', -1)">-</button>
+                <button class="btn btn-plus" onclick="changeValue('estructura', 1)">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-utility">
+        <div class="utility-item">
+            <span>📅 Turno Global:</span>
+            <strong id="turnValue">1</strong>
+        </div>
+        <div style="display: flex; gap: 5px;">
+            <button class="utility-btn" onclick="changeTurn(-1)">-</button>
+            <button class="utility-btn" onclick="changeTurn(1)">+</button>
+            <button class="utility-btn" style="background:#444;" onclick="resetAll()">Reset App</button>
+        </div>
+    </div>
+
+    <script>
+        let data = {
+            frecuencia: 3,
+            estructura: 10,
+            turno: 1
+        };
+
+        function updateDOM() {
+            document.getElementById('frecuenciaValue').innerText = data.frecuencia;
+            document.getElementById('estructuraValue').innerText = data.estructura;
+            document.getElementById('turnValue').innerText = data.turno;
+
+            // Manejo del estado de Vasallaje
+            const badge = document.getElementById('statusBadge');
+            if (data.estructura <= 0) {
+                badge.innerText = "🚨 ESTADO: VASALLO";
+                badge.className = "status-badge vasallo";
+            } else {
+                badge.innerText = "🛡️ ESTADO: AUTÓNOMO";
+                badge.className = "status-badge";
+            }
+        }
+
+        function changeValue(type, amount) {
+            data[type] += amount;
+            if (type === 'frecuencia' && data.frecuencia < 0) data.frecuencia = 0;
+            if (type === 'estructura' && data.estructura < 0) data.estructura = 0;
+            updateDOM();
+        }
+
+        function resetTurn() {
+            data.frecuencia = 3;
+            data.turno += 1;
+            updateDOM();
+        }
+
+        function changeTurn(amount) {
+            data.turno += amount;
+            if (data.turno < 1) data.turno = 1;
+            updateDOM();
+        }
+
+        function resetAll() {
+            if (confirm("¿Reiniciar toda la partida?")) {
+                data.frecuencia = 3;
+                data.estructura = 10;
+                data.turno = 1;
+                updateDOM();
+            }
+        }
+
+        // Evitar zoom accidental al tocar rápido en iPhone
+        document.addEventListener('touchstart', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>
